@@ -4,7 +4,10 @@
 ;; 取消工具栏
 (tool-bar-mode nil)
 (setq make-backup-files nil) ; 禁止保存备份文件
-(global-linum-mode t) ;显示行号
+;显示行号
+(setq column-number-mode t)
+(setq line-number-mode t)
+(setq linum-format "%d ")
 (setq-default indent-tabs-mode nil) ;空格代替TAB
 (global-font-lock-mode t) ;开启语法高亮
 ;;设置打开文件的缺省路径，这里为桌面，默认的路径为“～/”
@@ -13,6 +16,8 @@
 (display-time-mode t)
 ;; 使用24小时制
 (setq display-time-24hr-format t)
+(setq display-time-day-and-date t)
+(display-time)
 (fset 'yes-or-no-p 'y-or-n-p)    ; 按 y 或空格键表示 yes，n 表示 no
 (setq show-paren-mode t) ;打开括号匹配显示模式
 (setq show-paren-style 'parenthesis) ;括号匹配时可以高亮显示另外一边的括号，但光标不会烦人的跳到另一个括号处。
@@ -125,112 +130,4 @@
  /usr/include/x86_64-linux-gnu
  /usr/include
 ")))  
-  (setq-default ac-sources '(ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))  
-  (add-hook 'emacs-lisp-mode-hook 'ac-emacs-lisp-mode-setup)  
-  ;; (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)  
-  (add-hook 'ruby-mode-hook 'ac-ruby-mode-setup)  
-  (add-hook 'css-mode-hook 'ac-css-mode-setup)  
-  (add-hook 'auto-complete-mode-hook 'ac-common-setup)  
-  (global-auto-complete-mode t))  
-(defun my-ac-cc-mode-setup ()  
-  (setq ac-sources (append '(ac-source-clang ac-source-yasnippet) ac-sources)))  
-(add-hook 'c-mode-common-hook 'my-ac-cc-mode-setup)  
-;; ac-source-gtags  
-(my-ac-config)  
-
-
-;;代码缩进的配置
-(setq indent-tabs-mode nil)
-(setq default-tab-width 4)
-(setq tab-width 4)
-(setq tab-stop-list '(4 8 12 16 20 24 28 32 36 40
-      44 48 52 56 60 64 68 72 76 80 84 88 92 96)) 
-(defconst my-c-style
-  '((c-tab-always-indent        . t)
-    (c-comment-only-line-offset . 4)
-    (c-hanging-braces-alist     . ((substatement-open after)
-                                   (brace-list-open)))
-    (c-hanging-colons-alist     . ((member-init-intro before)
-                                   (inher-intro)
-                                   (case-label after)
-                                   (label after)
-                                   (access-label after)))
-    (c-cleanup-list             . (scope-operator
-                                   empty-defun-braces
-                                   defun-close-semi))
-    (c-offsets-alist            . ((arglist-close . c-lineup-arglist)
-                                   (substatement-open . 0)
-                                   (case-label        . 4)
-                                   (block-open        . 0)
-                                   (knr-argdecl-intro . -)))
-    (c-echo-syntactic-information-p . t)
-    )
-  "My C Programming Style")
-;; offset customizations not in my-c-style
-(setq c-offsets-alist '((member-init-intro . ++)))
-;; Customizations for all modes in CC Mode.
-(defun my-c-mode-common-hook ()
-  ;; add my personal style and set it for the current buffer
-  (c-add-style "PERSONAL" my-c-style t)
-  ;; other customizations
-  (setq tab-width 4
-        ;; this will make sure spaces are used instead of tabs
-        indent-tabs-mode nil)
-  ;; we like auto-newline and hungry-delete
-;  (c-toggle-auto-hungry-state 1)
-  ;; key bindings for all supported languages.  We can put these in
-  ;; c-mode-base-map because c-mode-map, c++-mode-map, objc-mode-map,
-  ;; java-mode-map, idl-mode-map, and pike-mode-map inherit from it.
-  (define-key c-mode-base-map "\C-m" 'c-context-line-break)
-  )
-(add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
-
-
-;;自动补全括号
-(defun my-c-mode-auto-pair ()
-  (interactive)
-  (make-local-variable 'skeleton-pair-alist)
-  (setq skeleton-pair-alist  '(
-    (?` ?` _ "''")
-    (?"( ?  _ " )")
-    (?"[ ?  _ " ]")
-    (?{ "n > _ "n ?} >)))
-  (setq skeleton-pair t)
-  (local-set-key (kbd "(") 'skeleton-pair-insert-maybe)
-  (local-set-key (kbd "{") 'skeleton-pair-insert-maybe)
-  (local-set-key (kbd "`") 'skeleton-pair-insert-maybe)
-  (local-set-key (kbd "[") 'skeleton-pair-insert-maybe))
-(add-hook 'c-mode-hook 'my-c-mode-auto-pair)
-(add-hook 'c++-mode-hook 'my-c-mode-auto-pair)
-
-;; 快捷键配置
-(global-set-key [(f4)] 'speedbar)
-(global-set-key [(f5)] 'gud-step)
-(global-set-key [(f6)] 'gud-next)
-(global-set-key [C-f6] 'gud-finish)
-(global-set-key [(f8)] 'gud-cont)
-(global-set-key [(f9)] 'gud-break)
-(global-set-key [C-f9] 'gud-remove)
-(global-set-key [(f10)] 'gdb-many-windows)
-(global-set-key [(C-f10)] 'gdb-restore-windows)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  (setq-default ac-sources
